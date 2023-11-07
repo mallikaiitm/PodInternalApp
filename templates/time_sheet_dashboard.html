@@ -1,0 +1,139 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <div class="d-flex flex-column-fluid">
+    <div class="container">
+      <div class="card card-custom">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-xl-3">
+              <div
+                class="card card-custom bg-light-success card-stretch gutter-b"
+              >
+                <div class="card-body">
+                  <span class="svg-icon svg-icon-2x svg-icon-success"></span>
+                  <span
+                    class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
+                    >$5,209</span
+                  >
+                  <span class="font-weight-bold text-muted font-size-sm"
+                    >Total</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3">
+              <div
+                class="card card-custom bg-light-danger card-stretch gutter-b"
+              >
+                <div class="card-body">
+                  <span class="svg-icon svg-icon-2x svg-icon-danger"> </span>
+                  <span
+                    class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
+                    >2,044</span
+                  >
+                  <span class="font-weight-bold text-muted font-size-sm"
+                    >Open</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3">
+              <div class="card card-custom bg-light-info card-stretch gutter-b">
+                <div class="card-body">
+                  <span class="svg-icon svg-icon-2x svg-icon-info"> </span>
+                  <span
+                    class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
+                    >$50,000</span
+                  >
+                  <span class="font-weight-bold text-muted font-size-sm"
+                    >Working</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3">
+              <div
+                class="card card-custom bg-light-warning card-stretch gutter-b"
+              >
+                <div class="card-body">
+                  <span class="svg-icon svg-icon-2x svg-icon-info"> </span>
+                  <span
+                    class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
+                    >23,508</span
+                  >
+                  <span class="font-weight-bold text-muted font-size-sm"
+                    >Completed</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#form").submit(function (e) {
+      e.preventDefault();
+      var form = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "/Ajax_call",
+        data: form + "&page=definition&module=5&act=addUpdate",
+        success: function (data) {
+          alert("Updated Successfully");
+          document.getElementById("form").reset();
+        },
+      });
+    });
+  });
+</script>
+<script>
+  $(document).on("click", ".edit", function () {
+    var id = $(this).data("id");
+
+    $("#exampleModal").modal("show");
+    $.ajax({
+      type: "POST",
+      url: "/Ajax_call",
+      data: {
+        page: "definition",
+        module: "5",
+        id: id,
+
+        act: "editView",
+      },
+      success: function (data) {
+        $("#type").val(data["type"]);
+        $("#title").val(data["title"]);
+        $("#id").val(data["id"]);
+      },
+    });
+  });
+</script>
+<script>
+  $(document).on("click", ".delete", function () {
+    var id = $(this).data("id");
+    var status = $(this).data("status");
+    $(this).prop("disabled", true);
+    $.ajax({
+      type: "POST",
+      url: "/Ajax_call",
+      data: {
+        page: "definition",
+        module: "5",
+        id: id,
+        status: status,
+        act: "DeleteData",
+      },
+      success: function (data) {
+        toastr.danger("Deleted");
+        location.reload(true);
+      },
+    });
+  });
+</script>
+{% endblock %}

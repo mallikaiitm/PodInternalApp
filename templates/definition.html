@@ -1,0 +1,214 @@
+{% extends "layout.html" %} {% block content %}
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <div class="d-flex flex-column-fluid">
+    <div class="container">
+      <div class="card card-custom example example-compact">
+        <div class="card-header">
+          <h3 class="card-title">Definition {{titles}}</h3>
+          <div class="card-toolbar">
+            <div class="example-tools justify-content-center">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search..."
+                id="kt_datatable_search_query"
+                fdprocessedid="rgq2uh"
+              />
+            </div>
+            &nbsp; &nbsp;
+            <div class="example-tools justify-content-center">
+              <button
+                type="button"
+                class="btn btn-light-info font-weight-bolder btn-sm"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                <i class="flaticon2-rocket-1"></i>Add New
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!--begin: Datatable-->
+          <table
+            class="table table-separate table-head-custom table-checkable"
+            id="kt_datatable"
+          >
+            <thead>
+              <tr>
+                <th>Actions</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for i in definition_list %}
+              <tr>
+                <td>
+                  <button
+                    class="btn btn-icon btn-light-primary btn-circle mr-2 edit"
+                    data-id="{{ i['id']}}"
+                  >
+                    <i class="flaticon2-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-icon btn-light-danger btn-circle mr-2 delete"
+                    data-id="{{ i['id']}}"
+                    data-status="{% if i['status'] == 1: %} 0 {% else %} 1 {% endif
+                      %}"
+                  >
+                    <i class="flaticon2-delete"></i>
+                  </button>
+                </td>
+                <td>{{ i['title']}}</td>
+                <td>{{ i['type']}}</td>
+                <td>
+                  {% if i['status'] == 1: %} Active {% else %} Inactive {% endif
+                  %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!--end: Datatable-->
+        </div>
+      </div>
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">ADD/UPDATE</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <i aria-hidden="true" class="ki ki-close"></i>
+              </button>
+            </div>
+            <div id="msg"></div>
+            <form
+              class="form form--fit"
+              id="form"
+              method="post"
+              enctype="multipart/form-data"
+              action=""
+            >
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Title</label>
+                  <select name="title" class="form-control" id="title" required>
+                    {% for row in title %}
+                    <option value="{{row.id}}">{{row.title}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Type</label>
+                  <input
+                    type="text"
+                    name="type"
+                    id="type"
+                    class="form-control"
+                    required
+                  />
+                  <input type="hidden" name="id" id="id" class="form-control" />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary mr-2"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  name="submit"
+                  id="submit"
+                  class="btn btn-secondary"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#form").submit(function (e) {
+      e.preventDefault();
+      var form = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "/Ajax_call",
+        data: form + "&page=definition&module=5&act=addUpdate",
+        success: function (data) {
+          alert("Updated Successfully");
+          document.getElementById("form").reset();
+        },
+      });
+    });
+  });
+</script>
+<script>
+  $(document).on("click", ".edit", function () {
+    var id = $(this).data("id");
+
+    $("#exampleModal").modal("show");
+    $.ajax({
+      type: "POST",
+      url: "/Ajax_call",
+      data: {
+        page: "definition",
+        module: "5",
+        id: id,
+
+        act: "editView",
+      },
+      success: function (data) {
+        $("#type").val(data["type"]);
+        $("#title").val(data["title"]);
+        $("#id").val(data["id"]);
+      },
+    });
+  });
+</script>
+<script>
+  $(document).on("click", ".delete", function () {
+    var id = $(this).data("id");
+    var status = $(this).data("status");
+    $(this).prop("disabled", true);
+    $.ajax({
+      type: "POST",
+      url: "/Ajax_call",
+      data: {
+        page: "definition",
+        module: "5",
+        id: id,
+        status: status,
+        act: "DeleteData",
+      },
+      success: function (data) {
+        toastr.danger("Deleted");
+        location.reload(true);
+      },
+    });
+  });
+</script>
+{% endblock %}
