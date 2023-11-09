@@ -10225,18 +10225,18 @@ var KTLayoutChat = function () {
 			_init(KTUtil.getById(id));
 
 			// Trigger click to show popup modal chat on page load
-			if (encodeURI(window.location.hostname) == 'keenthemes.com' || encodeURI(window.location.hostname) == 'www.keenthemes.com') {
-				setTimeout(function() {
-		            if (!KTCookie.getCookie('kt_app_chat_shown')) {
-		                var expires = new Date(new Date().getTime() + 60 * 60 * 1000); // expire in 60 minutes from now
+			// if (encodeURI(window.location.hostname) == 'keenthemes.com' || encodeURI(window.location.hostname) == 'www.keenthemes.com') {
+			// 	setTimeout(function() {
+		    //         if (!KTCookie.getCookie('kt_app_chat_shown')) {
+		    //             var expires = new Date(new Date().getTime() + 60 * 60 * 1000); // expire in 60 minutes from now
 
-						KTCookie.setCookie('kt_app_chat_shown', 1, { expires: expires });
+			// 			KTCookie.setCookie('kt_app_chat_shown', 1, { expires: expires });
 
-						if (KTUtil.getById('kt_app_chat_launch_btn')) {
-							KTUtil.getById('kt_app_chat_launch_btn').click();
-						}
-		            }
-		        }, 2000);
+			// 			if (KTUtil.getById('kt_app_chat_launch_btn')) {
+			// 				KTUtil.getById('kt_app_chat_launch_btn').click();
+			// 			}
+		    //         }
+		    //     }, 2000);
 	        }
         },
 
@@ -10320,9 +10320,9 @@ var KTLayoutDemoPanel = function() {
     }
 
     var _remind = function() {
-        if (!(encodeURI(window.location.hostname) == 'keenthemes.com' || encodeURI(window.location.hostname) == 'www.keenthemes.com')) {
-            return;
-        }
+        // if (!(encodeURI(window.location.hostname) == 'keenthemes.com' || encodeURI(window.location.hostname) == 'www.keenthemes.com')) {
+        //     return;
+        // }
 
         setTimeout(function() {
             if (!KTCookie.getCookie('kt_demo_panel_shown')) {
